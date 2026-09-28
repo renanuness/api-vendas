@@ -98,6 +98,7 @@ services:
       # auth-service-docker.properties (sobrescreve a URL do Eureka)
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - JWT_SECRET=d7bddaad-8e80-4354-ac90-d3a9ff38470d
     ports:
       - "8084:8084"
     networks:
