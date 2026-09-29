@@ -18,13 +18,13 @@ RUN mvn package -DskipTests -B
 # Imagem final, só com o JRE (bem mais leve; não carrega Maven nem código-fonte)
 FROM eclipse-temurin:17-jre
 WORKDIR /app
-
+RUN apt update && apt install iputils-ping -y
 # Traz apenas o .jar gerado no estágio "build" acima
 COPY --from=build /app/target/*.jar app.jar
 
 # Documenta a porta usada pela aplicação (não publica sozinha; quem expõe
 # de verdade pra fora do container é o "ports:" no docker-compose.yml)
-EXPOSE 8086
+EXPOSE 8084
 
 # Comando executado quando o container sobe
 ENTRYPOINT ["java", "-jar", "app.jar"]

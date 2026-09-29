@@ -16,10 +16,13 @@ public class JwtToken {
     private  SecretKey secretKey;
 
     public JwtToken(@Value("${jwt.secret}") String segredo) {
+        System.out.println("CHAVE: " + segredo);
         secretKey = Keys.hmacShaKeyFor(segredo.getBytes());
     }
 
     public String gerarToken(Usuario usuario){
+
+
         return Jwts.builder()
                 .subject(usuario.getEmail())
                 .signWith(secretKey).compact();

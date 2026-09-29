@@ -33,6 +33,8 @@ public class TokenFilter implements GlobalFilter, Ordered {
     // em chave de verdade. E' a MESMA do auth-service: la assina, aqui confere.
     public TokenFilter(@Value("${jwt.secret}") String segredo) {
         this.chave = Keys.hmacShaKeyFor(segredo.getBytes(StandardCharsets.UTF_8));
+        System.out.println("CHAVE: " + segredo);
+
     }
 
     // Este metodo roda a cada requisicao que chega no gateway.
@@ -51,6 +53,7 @@ public class TokenFilter implements GlobalFilter, Ordered {
 
         // Nao mandou cabecalho, ou mandou em outro formato: nem olha o token.
         if (cabecalho == null || !cabecalho.startsWith("Bearer ")) {
+            System.out.println("Token não encontrado");
             return recusar(exchange);
         }
 
@@ -58,11 +61,14 @@ public class TokenFilter implements GlobalFilter, Ordered {
             // substring(7) corta o "Bearer " (7 letras) e deixa so' o token.
             // parseSignedClaims confere a assinatura com a nossa chave e
             // estoura excecao se o token for falso ou tiver sido alterado.
+
+
             Jwts.parser()
                     .verifyWith(chave)
                     .build()
                     .parseSignedClaims(cabecalho.substring(7));
         } catch (Exception e) {
+            System.out.println("Token inválido");
             return recusar(exchange);
         }
 
